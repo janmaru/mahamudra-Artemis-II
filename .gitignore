@@ -1,0 +1,41 @@
+### Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+*.spec
+
+### Virtual environments
+venv/
+.venv/
+env/
+
+### IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+### Logs
+*.log
+artemis.log
+
+### Windows
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.ico
+launcher.pyw
+
+### macOS
+.DS_Store
+
+### Claude
+.claude/
+errors
+.claude/settings.local.json
+UI

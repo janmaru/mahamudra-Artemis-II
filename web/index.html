@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artemis II - Mission Dashboard</title>
+    <link rel="icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <div id="header" class="section header">
+            <div class="mission-title">ARTEMIS II - ORION "INTEGRITY"</div>
+            <div class="mission-info">
+                <span id="met-display">MET: --d --h --m --s</span>
+                <span id="flight-day">Flight Day --</span>
+                <span id="phase">Phase: --</span>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Left Column: Solar Map + Photo -->
+            <div class="left-column">
+                <div id="solar-map" class="section panel">
+                    <div class="panel-title">ARTEMIS II TRAJECTORY</div>
+                    <div class="panel-content">
+                        <canvas id="solar-map-canvas"></canvas>
+                        <div id="solar-map-legend">Loading...</div>
+                    </div>
+                </div>
+                
+                <div id="photo" class="section panel">
+                    <div class="panel-title">MISSION PHOTO</div>
+                    <div class="panel-content">
+                        <img id="photo-image" src="" alt="Mission Photo" style="display:none;">
+                        <div id="photo-placeholder">No photo available</div>
+                        <div id="photo-title"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Spacecraft + DSN -->
+            <div class="right-column">
+                <div id="spacecraft" class="section panel">
+                    <div class="panel-title">SPACECRAFT</div>
+                    <div class="panel-content">
+                        <table>
+                            <tr>
+                                <td>Earth Distance</td>
+                                <td id="earth-distance">-- km</td>
+                            </tr>
+                            <tr>
+                                <td>Moon Distance</td>
+                                <td id="moon-distance">-- km</td>
+                            </tr>
+                            <tr>
+                                <td>Speed</td>
+                                <td id="speed">-- km/s</td>
+                            </tr>
+                            <tr>
+                                <td>Position (x1000 km)</td>
+                                <td id="position">-- / -- / --</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="dsn" class="section panel">
+                    <div class="panel-title">DSN COMMUNICATIONS</div>
+                    <div class="panel-content">
+                        <table id="dsn-table">
+                            <thead>
+                                <tr>
+                                    <th>Station</th>
+                                    <th>Dish</th>
+                                    <th>Down</th>
+                                    <th>Up</th>
+                                    <th>RTLT</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dsn-tbody">
+                                <tr><td colspan="5">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Grid: Weather + Alerts -->
+        <div class="bottom-grid">
+            <div id="weather" class="section panel">
+                <div class="panel-title">SPACE WEATHER</div>
+                <div class="panel-content">
+                    <table>
+                        <tr>
+                            <td>Kp Index</td>
+                            <td id="kp-index">-- (--)</td>
+                        </tr>
+                        <tr>
+                            <td>NOAA Scales</td>
+                            <td id="noaa-scales">-- -- --</td>
+                        </tr>
+                        <tr>
+                            <td>Wind Speed</td>
+                            <td id="wind-speed">-- km/s</td>
+                        </tr>
+                        <tr>
+                            <td>Wind Density</td>
+                            <td id="wind-density">-- p/cm³</td>
+                        </tr>
+                        <tr>
+                            <td>IMF Bz</td>
+                            <td id="imf-bz">-- nT</td>
+                        </tr>
+                        <tr>
+                            <td>Wind Temp</td>
+                            <td id="wind-temp">-- K</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="alerts" class="section panel">
+                <div class="panel-title">ALERTS & EVENTS</div>
+                <div class="panel-content">
+                    <ul id="alerts-list">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div id="status" class="section status">
+            <span id="status-content">Initializing...</span>
+            <span id="last-update">Updated now</span>
+        </div>
+    </div>
+
+    <script src="api-client.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
