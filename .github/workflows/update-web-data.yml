@@ -1,6 +1,8 @@
 name: Update Artemis II Web Dashboard Data
 
 on:
+  push:
+    branches: [main]
   schedule:
     # Run every 10 minutes
     - cron: '*/10 * * * *'
