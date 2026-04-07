@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-04-07T19:57:48.267225Z",
+  "timestamp": "2026-04-07T20:04:43.875990Z",
   "data": {
     "kp": {
       "timestamp": "2026-04-07T15:00:00",
       "kp": 2.33
     },
     "solar_wind": {
-      "speed": 412.5,
-      "density": 1.37,
-      "temperature": 125374.0,
-      "bz": -2.79
+      "speed": 414.2,
+      "density": 1.46,
+      "temperature": 148754.0,
+      "bz": null
     },
     "scales": {
       "g": 0,
       "s": 0,
       "r": 0
     },
-    "fetched_at": "2026-04-07 19:57:48.266930+00:00"
+    "fetched_at": "2026-04-07 20:04:43.875686+00:00"
   }
 }
