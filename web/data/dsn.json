@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-08T02:48:06.397815Z",
+  "timestamp": "2026-04-08T03:52:25.028737Z",
   "data": {
     "dishes": [
       {
@@ -7,30 +7,30 @@
         "station_code": "mdscc",
         "dish_name": "DSS56",
         "size_m": 34,
-        "azimuth": 165.0,
-        "elevation": 19.0,
+        "azimuth": 180.0,
+        "elevation": 20.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 3000000.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 2.4,
-        "downleg_range_km": 360000.0
+        "rtlt_seconds": 2.38,
+        "downleg_range_km": 357000.0
       },
       {
         "station_name": "Madrid",
         "station_code": "mdscc",
         "dish_name": "DSS54",
         "size_m": 34,
-        "azimuth": 165.0,
-        "elevation": 19.0,
+        "azimuth": 180.0,
+        "elevation": 20.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 3000000.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 2.4,
-        "downleg_range_km": 360000.0
+        "rtlt_seconds": 2.38,
+        "downleg_range_km": 357000.0
       }
     ],
-    "fetched_at": "2026-04-08 02:48:06.397508+00:00"
+    "fetched_at": "2026-04-08 03:52:25.028398+00:00"
   }
 }
