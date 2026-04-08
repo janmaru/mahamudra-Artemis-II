@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-08T21:06:02.351883Z",
+  "timestamp": "2026-04-08T21:28:50.516672Z",
   "data": {
     "dishes": [
       {
@@ -7,8 +7,8 @@
         "station_code": "cdscc",
         "dish_name": "DSS43",
         "size_m": 70,
-        "azimuth": 263.0,
-        "elevation": 47.0,
+        "azimuth": 261.0,
+        "elevation": 42.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 6000000.0,
         "uplink_freq_hz": 0.0,
@@ -21,8 +21,8 @@
         "station_code": "cdscc",
         "dish_name": "DSS34",
         "size_m": 34,
-        "azimuth": 264.0,
-        "elevation": 47.0,
+        "azimuth": 261.0,
+        "elevation": 42.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 6000000.0,
         "uplink_freq_hz": 0.0,
@@ -31,6 +31,6 @@
         "downleg_range_km": 307000.0
       }
     ],
-    "fetched_at": "2026-04-08 21:06:02.351543+00:00"
+    "fetched_at": "2026-04-08 21:28:50.516420+00:00"
   }
 }
