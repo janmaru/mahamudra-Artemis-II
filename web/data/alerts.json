@@ -1,12 +1,18 @@
 {
-  "timestamp": "2026-04-08T11:14:15.522449Z",
+  "timestamp": "2026-04-08T11:40:32.485481Z",
   "data": {
     "events": [
       {
         "event_type": "CME",
         "start_time": "2026-04-08T03:53Z",
-        "class_type": "HA=37.0",
+        "class_type": "HA=33.0",
         "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45562/-1"
+      },
+      {
+        "event_type": "CME",
+        "start_time": "2026-04-08T00:15Z",
+        "class_type": "HA=23.0",
+        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45564/-1"
       },
       {
         "event_type": "CME",
@@ -21,6 +27,6 @@
         "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45551/-1"
       }
     ],
-    "fetched_at": "2026-04-08 11:14:15.389383+00:00"
+    "fetched_at": "2026-04-08 11:40:32.485148+00:00"
   }
 }

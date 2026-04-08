@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-08T11:14:14.864375Z",
+  "timestamp": "2026-04-08T11:40:32.105690Z",
   "data": {
     "dishes": [
       {
@@ -7,30 +7,30 @@
         "station_code": "gdscc",
         "dish_name": "DSS26",
         "size_m": 34,
-        "azimuth": 177.0,
+        "azimuth": 184.0,
         "elevation": 25.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 0.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 2.26,
-        "downleg_range_km": 338000.0
+        "rtlt_seconds": 2.25,
+        "downleg_range_km": 337000.0
       },
       {
         "station_name": "Goldstone",
         "station_code": "gdscc",
         "dish_name": "DSS24",
         "size_m": 34,
-        "azimuth": 178.0,
+        "azimuth": 184.0,
         "elevation": 25.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 0.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 2.26,
-        "downleg_range_km": 338000.0
+        "rtlt_seconds": 2.25,
+        "downleg_range_km": 337000.0
       }
     ],
-    "fetched_at": "2026-04-08 11:14:14.861507+00:00"
+    "fetched_at": "2026-04-08 11:40:32.105321+00:00"
   }
 }
