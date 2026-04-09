@@ -1,68 +1,7 @@
 {
-  "timestamp": "2026-04-09T10:31:38.099029Z",
+  "timestamp": "2026-04-09T11:05:42.358648Z",
   "data": {
-    "events": [
-      {
-        "event_type": "FLR",
-        "start_time": "2026-04-09T08:23Z",
-        "class_type": "M1.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/FLR/45582/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-09T06:09Z",
-        "class_type": "HA=15.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45586/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-09T01:00Z",
-        "class_type": "HA=15.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45583/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-08T07:24Z",
-        "class_type": "HA=26.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45567/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-08T06:23Z",
-        "class_type": "HA=25.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45571/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-08T03:53Z",
-        "class_type": "HA=33.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45562/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-08T00:15Z",
-        "class_type": "HA=31.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45564/-1"
-      },
-      {
-        "event_type": "FLR",
-        "start_time": "2026-04-07T23:10Z",
-        "class_type": "C2.4",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/FLR/45575/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-07T23:00Z",
-        "class_type": "HA=28.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45576/-1"
-      },
-      {
-        "event_type": "CME",
-        "start_time": "2026-04-06T19:45Z",
-        "class_type": "HA=30.0",
-        "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45555/-1"
-      }
-    ],
-    "fetched_at": "2026-04-09 10:31:38.098700+00:00"
+    "events": [],
+    "fetched_at": "2026-04-09 11:05:42.358306+00:00"
   }
 }
