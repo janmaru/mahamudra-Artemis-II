@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-09T13:11:12.564188Z",
+  "timestamp": "2026-04-09T14:02:55.175557Z",
   "data": {
     "dishes": [
       {
@@ -7,58 +7,58 @@
         "station_code": "gdscc",
         "dish_name": "DSS24",
         "size_m": 34,
-        "azimuth": 202.0,
-        "elevation": 19.0,
+        "azimuth": 212.0,
+        "elevation": 14.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 0.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.67,
-        "downleg_range_km": 251000.0
+        "rtlt_seconds": 1.64,
+        "downleg_range_km": 247000.0
       },
       {
         "station_name": "Goldstone",
         "station_code": "gdscc",
         "dish_name": "DSS26",
         "size_m": 34,
-        "azimuth": 201.0,
-        "elevation": 19.0,
+        "azimuth": 212.0,
+        "elevation": 15.0,
         "downlink_freq_hz": 0.0,
-        "downlink_data_rate_bps": 4000000.0,
+        "downlink_data_rate_bps": 2000000.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.67,
-        "downleg_range_km": 251000.0
+        "rtlt_seconds": 1.64,
+        "downleg_range_km": 247000.0
       },
       {
         "station_name": "Canberra",
         "station_code": "cdscc",
         "dish_name": "DSS34",
         "size_m": 34,
-        "azimuth": 15.0,
-        "elevation": 90.0,
+        "azimuth": 102.0,
+        "elevation": 41.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 0.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.67,
-        "downleg_range_km": 251000.0
+        "rtlt_seconds": 1.64,
+        "downleg_range_km": 247000.0
       },
       {
         "station_name": "Canberra",
         "station_code": "cdscc",
         "dish_name": "DSS43",
         "size_m": 70,
-        "azimuth": 17.0,
-        "elevation": 88.0,
+        "azimuth": 102.0,
+        "elevation": 41.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 0.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.67,
-        "downleg_range_km": 251000.0
+        "rtlt_seconds": 1.64,
+        "downleg_range_km": 247000.0
       }
     ],
-    "fetched_at": "2026-04-09 13:11:12.563846+00:00"
+    "fetched_at": "2026-04-09 14:02:55.175218+00:00"
   }
 }
