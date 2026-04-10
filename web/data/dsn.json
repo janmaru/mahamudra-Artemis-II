@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-10T00:57:00.577528Z",
+  "timestamp": "2026-04-10T01:44:23.213933Z",
   "data": {
     "dishes": [
       {
@@ -7,58 +7,30 @@
         "station_code": "mdscc",
         "dish_name": "DSS56",
         "size_m": 34,
-        "azimuth": 90.0,
-        "elevation": 90.0,
+        "azimuth": 147.0,
+        "elevation": 7.0,
         "downlink_freq_hz": 0.0,
-        "downlink_data_rate_bps": 0.0,
+        "downlink_data_rate_bps": 6000000.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.33,
-        "downleg_range_km": 200000.0
+        "rtlt_seconds": 1.3,
+        "downleg_range_km": 195000.0
       },
       {
         "station_name": "Madrid",
         "station_code": "mdscc",
         "dish_name": "DSS54",
         "size_m": 34,
-        "azimuth": 90.0,
-        "elevation": 90.0,
+        "azimuth": 147.0,
+        "elevation": 7.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 0.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.33,
-        "downleg_range_km": 200000.0
-      },
-      {
-        "station_name": "Canberra",
-        "station_code": "cdscc",
-        "dish_name": "DSS34",
-        "size_m": 34,
-        "azimuth": 237.0,
-        "elevation": 7.0,
-        "downlink_freq_hz": 0.0,
-        "downlink_data_rate_bps": 6000000.0,
-        "uplink_freq_hz": 0.0,
-        "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.33,
-        "downleg_range_km": 200000.0
-      },
-      {
-        "station_name": "Canberra",
-        "station_code": "cdscc",
-        "dish_name": "DSS43",
-        "size_m": 70,
-        "azimuth": 237.0,
-        "elevation": 7.0,
-        "downlink_freq_hz": 0.0,
-        "downlink_data_rate_bps": 6000000.0,
-        "uplink_freq_hz": 0.0,
-        "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 1.33,
-        "downleg_range_km": 200000.0
+        "rtlt_seconds": 1.3,
+        "downleg_range_km": 195000.0
       }
     ],
-    "fetched_at": "2026-04-10 00:57:00.577145+00:00"
+    "fetched_at": "2026-04-10 01:44:23.213610+00:00"
   }
 }
