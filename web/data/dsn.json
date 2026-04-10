@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-10T20:15:48.532587Z",
+  "timestamp": "2026-04-10T20:35:01.755660Z",
   "data": {
     "dishes": [
       {
@@ -7,30 +7,30 @@
         "station_code": "cdscc",
         "dish_name": "DSS43",
         "size_m": 70,
-        "azimuth": 253.0,
-        "elevation": 81.0,
+        "azimuth": 254.0,
+        "elevation": 79.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 0.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 0.36,
-        "downleg_range_km": 53700.0
+        "rtlt_seconds": 0.33,
+        "downleg_range_km": 50000.0
       },
       {
         "station_name": "Canberra",
         "station_code": "cdscc",
         "dish_name": "DSS34",
         "size_m": 34,
-        "azimuth": 253.0,
-        "elevation": 81.0,
+        "azimuth": 254.0,
+        "elevation": 79.0,
         "downlink_freq_hz": 0.0,
         "downlink_data_rate_bps": 6000000.0,
         "uplink_freq_hz": 0.0,
         "uplink_data_rate_bps": 0.0,
-        "rtlt_seconds": 0.36,
-        "downleg_range_km": 53700.0
+        "rtlt_seconds": 0.33,
+        "downleg_range_km": 50000.0
       }
     ],
-    "fetched_at": "2026-04-10 20:15:48.532210+00:00"
+    "fetched_at": "2026-04-10 20:35:01.755307+00:00"
   }
 }
