@@ -3,11 +3,18 @@
 class Dashboard {
     constructor() {
         this.updateInterval = 10000; // 10 seconds between updates
-        this.launchDate = new Date('2026-04-02T13:30:00Z');
-        this.missionDuration = 10 * 24 * 60 * 60 * 1000; // 10 days
+        this.launchDate = new Date('2026-04-01T22:35:00Z');
         this.photos = [];
         this.photoIndex = 0;
         this.photoRotationSeconds = 6;
+
+        // Mission timeline (UTC) — source of truth for phase detection
+        this.timeline = {
+            TLI:            new Date('2026-04-02T23:49:00Z'),
+            LunarFlyby:     new Date('2026-04-06T23:00:00Z'),
+            EntryInterface:  new Date('2026-04-10T23:53:00Z'),
+            Splashdown:     new Date('2026-04-11T00:07:00Z'),
+        };
     }
 
     /**
@@ -47,9 +54,13 @@ class Dashboard {
             if (spacecraft.status === 'fulfilled' && spacecraft.value) {
                 this.updateSpacecraft(spacecraft.value);
                 this.updateSolarMap(spacecraft.value);
+            } else if (this.isMissionComplete()) {
+                this.updateSolarMap(null);
             }
-            if (dsn.status === 'fulfilled' && dsn.value) {
+            if (dsn.status === 'fulfilled') {
                 this.updateDSN(dsn.value);
+            } else if (this.isMissionComplete()) {
+                this.updateDSN(null);
             }
             if (weather.status === 'fulfilled' && weather.value) {
                 this.updateWeather(weather.value);
@@ -70,39 +81,67 @@ class Dashboard {
     }
 
     /**
+     * Check if mission is complete (now >= Splashdown)
+     */
+    isMissionComplete() {
+        return new Date() >= this.timeline.Splashdown;
+    }
+
+    /**
+     * Format milliseconds as DDd HHh MMm SSs
+     */
+    formatMET(ms) {
+        const totalSec = Math.floor(Math.abs(ms) / 1000);
+        const sign = ms < 0 ? '-' : '';
+        const days = Math.floor(totalSec / 86400);
+        const hours = Math.floor((totalSec % 86400) / 3600);
+        const minutes = Math.floor((totalSec % 3600) / 60);
+        const seconds = totalSec % 60;
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${sign}${pad(days)}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+    }
+
+    /**
      * Update header with MET (Mission Elapsed Time)
      */
     updateHeader() {
         const now = new Date();
-        const elapsed = now - this.launchDate;
+        const phase = this.getMissionPhase();
 
-        const days = Math.floor(elapsed / (24 * 60 * 60 * 1000));
-        const hours = Math.floor((elapsed % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-        const minutes = Math.floor((elapsed % (60 * 60 * 1000)) / (60 * 1000));
-        const seconds = Math.floor((elapsed % (60 * 1000)) / 1000);
+        if (this.isMissionComplete()) {
+            // Frozen MET at splashdown
+            const finalMET = this.timeline.Splashdown - this.launchDate;
+            document.getElementById('met-display').textContent = `MET: ${this.formatMET(finalMET)} (final)`;
 
-        const metDisplay = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        document.getElementById('met-display').textContent = `MET: ${metDisplay}`;
+            const finalDay = Math.floor(finalMET / 86400000) + 1;
+            document.getElementById('flight-day').textContent = `Flight Day ${finalDay} (final)`;
 
-        const flightDay = Math.floor(days) + 1;
-        document.getElementById('flight-day').textContent = `Flight Day ${flightDay}`;
+            // Time since splashdown
+            const sinceSplash = now - this.timeline.Splashdown;
+            const splashH = Math.floor(sinceSplash / 3600000);
+            const splashM = Math.floor((sinceSplash % 3600000) / 60000);
+            document.getElementById('phase').textContent = `Mission Complete | Splashdown +${splashH}h ${splashM}m`;
+        } else {
+            const elapsed = now - this.launchDate;
+            document.getElementById('met-display').textContent = `MET: ${this.formatMET(elapsed)}`;
 
-        const phase = this.getMissionPhase(days);
-        document.getElementById('phase').textContent = `Phase: ${phase}`;
+            const flightDay = Math.floor(elapsed / 86400000) + 1;
+            document.getElementById('flight-day').textContent = `Flight Day ${flightDay}`;
+            document.getElementById('phase').textContent = `Phase: ${phase}`;
+        }
     }
 
     /**
-     * Determine mission phase based on elapsed time
+     * Determine mission phase from timeline (source of truth)
      */
-    getMissionPhase(days) {
-        if (days < 0.5) return 'Launch';
-        if (days < 1.5) return 'Earth Escape';
-        if (days < 3) return 'Trans-Lunar';
-        if (days < 5) return 'Lunar Approach';
-        if (days < 6.5) return 'Lunar Flyby';
-        if (days < 8) return 'Trans-Earth';
-        if (days < 10) return 'Re-Entry';
-        return 'Recovery';
+    getMissionPhase() {
+        const now = new Date();
+        if (now < this.launchDate) return 'Pre-Launch';
+        if (now >= this.timeline.Splashdown) return 'Mission Complete';
+        if (now >= this.timeline.EntryInterface) return 'Re-Entry';
+        if (now >= this.timeline.LunarFlyby) return 'Return Transit';
+        if (now >= this.timeline.TLI) return 'Outbound Transit';
+        return 'Earth Departure';
     }
 
     /**
@@ -110,6 +149,20 @@ class Dashboard {
      */
     updateSpacecraft(data) {
         if (!data) return;
+
+        if (this.isMissionComplete()) {
+            document.getElementById('earth-distance').textContent = 'Mission Complete';
+            document.getElementById('earth-distance').style.color = '#88ff99';
+            document.getElementById('moon-distance').textContent =
+                `Last: ${data.moonDistance.toLocaleString('en-US', { maximumFractionDigits: 0 })} km`;
+            document.getElementById('moon-distance').style.color = '#666';
+            document.getElementById('speed').textContent =
+                `Last: ${data.speed.toFixed(3)} km/s`;
+            document.getElementById('speed').style.color = '#666';
+            document.getElementById('position').textContent = 'Orion recovered';
+            document.getElementById('position').style.color = '#88ff99';
+            return;
+        }
 
         document.getElementById('earth-distance').textContent =
             `${data.earthDistance.toLocaleString('en-US', { maximumFractionDigits: 0 })} km`;
@@ -125,13 +178,12 @@ class Dashboard {
      * Update solar map (canvas visualization)
      */
     updateSolarMap(data) {
-        if (!data) return;
+        if (!data && !this.isMissionComplete()) return;
 
         const canvas = document.getElementById('solar-map-canvas');
         const container = canvas.parentElement;
         const rect = container.getBoundingClientRect();
 
-        // Size canvas to fill panel content (minus legend space)
         const w = Math.floor(rect.width);
         const h = Math.floor(rect.height - 30);
         if (w <= 0 || h <= 0) return;
@@ -149,8 +201,32 @@ class Dashboard {
         ctx.fillStyle = '#0a0e27';
         ctx.fillRect(0, 0, w, h);
 
+        // Mission Complete state
+        if (this.isMissionComplete()) {
+            const finalMET = this.timeline.Splashdown - this.launchDate;
+            ctx.fillStyle = '#88ff99';
+            ctx.font = 'bold 18px Courier New';
+            ctx.textAlign = 'center';
+            ctx.fillText('Mission Complete', w / 2, h / 2 - 30);
+            ctx.font = '14px Courier New';
+            ctx.fillText(`Final MET: ${this.formatMET(finalMET)}`, w / 2, h / 2);
+            ctx.fillStyle = '#e0e0e0';
+            ctx.font = '12px Courier New';
+            ctx.fillText('Orion splashed down in the Pacific Ocean.', w / 2, h / 2 + 30);
+            if (data) {
+                ctx.fillStyle = '#666';
+                ctx.fillText(
+                    `Last tracked: Earth ${data.earthDistance.toLocaleString('en-US', { maximumFractionDigits: 0 })} km`,
+                    w / 2, h / 2 + 55
+                );
+            }
+            ctx.textAlign = 'start';
+            document.getElementById('solar-map-legend').textContent = 'Mission Complete';
+            return;
+        }
+
         // Positions (Earth-relative, km)
-        const orionX = data.position.x * 1000;  // position is in x1000 km
+        const orionX = data.position.x * 1000;
         const orionY = data.position.y * 1000;
         const moonX = data.raw?.moon?.x || 0;
         const moonY = data.raw?.moon?.y || 0;
@@ -181,7 +257,7 @@ class Dashboard {
             ];
         }
 
-        // Draw Earth at center (cyan circle)
+        // Draw Earth at center
         ctx.beginPath();
         ctx.arc(cx, cy, 6, 0, Math.PI * 2);
         ctx.fillStyle = '#00ffff';
@@ -190,7 +266,7 @@ class Dashboard {
         ctx.fillStyle = '#00ffff';
         ctx.fillText('Earth', cx + 10, cy + 4);
 
-        // Draw Moon (yellow circle)
+        // Draw Moon
         const [mx, my] = toCanvas(moonX, moonY);
         ctx.beginPath();
         ctx.arc(mx, my, 5, 0, Math.PI * 2);
@@ -199,7 +275,7 @@ class Dashboard {
         ctx.fillStyle = '#ffff00';
         ctx.fillText('Moon', mx + 9, my + 4);
 
-        // Draw Orion (magenta diamond)
+        // Draw Orion
         const [ox, oy] = toCanvas(orionX, orionY);
         const ds = 6;
         ctx.beginPath();
@@ -219,15 +295,21 @@ class Dashboard {
         const moonDist = data.moonDistance.toLocaleString('en-US', { maximumFractionDigits: 0 });
         const speed = data.speed.toFixed(3);
         document.getElementById('solar-map-legend').innerHTML =
-            `<span class="earth-legend">● ${earthDist} km</span> ` +
-            `<span class="moon-legend">● ${moonDist} km</span> ` +
-            `<span class="orion-legend">◆ Orion</span> | ${speed} km/s`;
+            `<span class="earth-legend">\u25CF ${earthDist} km</span> ` +
+            `<span class="moon-legend">\u25CF ${moonDist} km</span> ` +
+            `<span class="orion-legend">\u25C6 Orion</span> | ${speed} km/s`;
     }
 
     /**
      * Update DSN communications panel
      */
     updateDSN(stations) {
+        if (this.isMissionComplete()) {
+            document.getElementById('dsn-tbody').innerHTML =
+                '<tr><td colspan="5" style="color:#88ff99">Mission Complete — DSN tracking ended</td></tr>';
+            return;
+        }
+
         if (!stations || stations.length === 0) {
             document.getElementById('dsn-tbody').innerHTML = '<tr><td colspan="5">No active connections</td></tr>';
             return;
@@ -342,7 +424,10 @@ class Dashboard {
         const now = new Date();
         lastUpdate.textContent = `Updated ${now.toLocaleTimeString()}`;
 
-        if (status === 'error') {
+        if (this.isMissionComplete()) {
+            statusContent.textContent = 'Mission Complete — All feeds: Done';
+            statusContent.style.color = '#88ff99';
+        } else if (status === 'error') {
             statusContent.textContent = 'Error: Check connection';
             statusContent.style.color = '#ff6666';
         } else {

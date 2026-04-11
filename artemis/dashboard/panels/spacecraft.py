@@ -12,8 +12,36 @@ from artemis.compute import (
     staleness_seconds,
     staleness_style,
     get_best_perspective,
+    mission_phase_from_telemetry,
 )
 from artemis.models import SpacecraftData
+
+
+def _render_mission_complete(data: Optional[SpacecraftData]) -> Panel:
+    """Render spacecraft panel after mission completion."""
+    table = Table(show_header=False, box=None, padding=(0, 1), expand=True)
+    table.add_column("Label", style="dim", ratio=1)
+    table.add_column("Value", ratio=2)
+
+    table.add_row("", Text("Mission Complete — Orion recovered", style="bold bright_green"))
+    table.add_row("", Text(""))
+
+    if data is not None:
+        table.add_row("", Text("Last tracked position:", style="dim italic"))
+        table.add_row(
+            "Earth Distance",
+            Text(f"{format_number(data.distance_earth_km)} km", style="dim"),
+        )
+        table.add_row(
+            "Speed",
+            Text(f"{format_number(data.speed_km_s, 3)} km/s", style="dim"),
+        )
+        table.add_row(
+            "Last Epoch",
+            Text(data.orion.epoch.strftime("%Y-%m-%d %H:%M UTC"), style="dim"),
+        )
+
+    return Panel(table, title="[bold]SPACECRAFT[/bold]", border_style="blue")
 
 
 def render(data: Optional[SpacecraftData], errors: dict[str, str]) -> Panel:
@@ -26,6 +54,10 @@ def render(data: Optional[SpacecraftData], errors: dict[str, str]) -> Panel:
     Returns:
         Rich Panel showing Orion telemetry or error/waiting state.
     """
+    # After splashdown, show mission complete instead of stale telemetry
+    if mission_phase_from_telemetry() == "Mission Complete":
+        return _render_mission_complete(data)
+
     if data is None:
         error_msg = errors.get("HorizonsFetcher")
         if error_msg:
@@ -37,6 +69,11 @@ def render(data: Optional[SpacecraftData], errors: dict[str, str]) -> Panel:
     table = Table(show_header=False, box=None, padding=(0, 1), expand=True)
     table.add_column("Label", style="dim", ratio=1)
     table.add_column("Value", ratio=2)
+
+    # Show error banner when data is stale (from cache fallback)
+    error_msg = errors.get("HorizonsFetcher")
+    if error_msg:
+        table.add_row("", Text(f"[stale] {error_msg[:60]}", style="yellow"))
 
     perspective = get_best_perspective(data)
 

@@ -38,6 +38,20 @@ class SharedState:
             self._spacecraft = data
             self._errors.pop("HorizonsFetcher", None)
 
+    def update_spacecraft_stale(self, data: SpacecraftData, error: str) -> None:
+        """Store stale spacecraft data while preserving the error flag.
+
+        Used when live Horizons data is unavailable and we fall back to
+        cached data.  The error is kept so the UI can show a [stale] banner.
+
+        Args:
+            data: Stale SpacecraftData loaded from cache.
+            error: Error message describing why fresh data is unavailable.
+        """
+        with self._lock:
+            self._spacecraft = data
+            self._errors["HorizonsFetcher"] = error
+
     def update_dsn(self, data: DSNData) -> None:
         """Store new DSN data and clear any DSN error.
 

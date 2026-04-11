@@ -294,6 +294,7 @@ def cache_photo(data: MissionPhoto) -> None:
         with open(meta_file, "w") as f:
             json.dump({
                 "title": data.title,
+                "image_url": data.image_url,
                 "url": data.url,
                 "published": data.published,
                 "fetched_at": data.fetched_at.isoformat(),
@@ -303,10 +304,14 @@ def cache_photo(data: MissionPhoto) -> None:
         logger.warning("Failed to cache photo data: %s", exc)
 
 
-def load_spacecraft() -> Optional[SpacecraftData]:
-    """Load cached spacecraft data if not expired."""
+def load_spacecraft(allow_stale: bool = False) -> Optional[SpacecraftData]:
+    """Load cached spacecraft data.
+
+    Args:
+        allow_stale: If True, return data even if the cache TTL has expired.
+    """
     cache_file = CACHE_DIR / "spacecraft.json"
-    if is_cache_expired(cache_file, "spacecraft"):
+    if not allow_stale and is_cache_expired(cache_file, "spacecraft"):
         return None
     
     try:
@@ -347,10 +352,14 @@ def load_spacecraft() -> Optional[SpacecraftData]:
         return None
 
 
-def load_dsn() -> Optional[DSNData]:
-    """Load cached DSN data if not expired."""
+def load_dsn(allow_stale: bool = False) -> Optional[DSNData]:
+    """Load cached DSN data.
+
+    Args:
+        allow_stale: If True, return data even if the cache TTL has expired.
+    """
     cache_file = CACHE_DIR / "dsn.json"
-    if is_cache_expired(cache_file, "dsn"):
+    if not allow_stale and is_cache_expired(cache_file, "dsn"):
         return None
     
     try:
@@ -384,10 +393,14 @@ def load_dsn() -> Optional[DSNData]:
         return None
 
 
-def load_weather() -> Optional[SpaceWeatherData]:
-    """Load cached weather data if not expired."""
+def load_weather(allow_stale: bool = False) -> Optional[SpaceWeatherData]:
+    """Load cached weather data.
+
+    Args:
+        allow_stale: If True, return data even if the cache TTL has expired.
+    """
     cache_file = CACHE_DIR / "weather.json"
-    if is_cache_expired(cache_file, "weather"):
+    if not allow_stale and is_cache_expired(cache_file, "weather"):
         return None
     
     try:
@@ -426,10 +439,14 @@ def load_weather() -> Optional[SpaceWeatherData]:
         return None
 
 
-def load_donki() -> Optional[DONKIData]:
-    """Load cached DONKI data if not expired."""
+def load_donki(allow_stale: bool = False) -> Optional[DONKIData]:
+    """Load cached DONKI data.
+
+    Args:
+        allow_stale: If True, return data even if the cache TTL has expired.
+    """
     cache_file = CACHE_DIR / "donki.json"
-    if is_cache_expired(cache_file, "donki"):
+    if not allow_stale and is_cache_expired(cache_file, "donki"):
         return None
     
     try:
@@ -455,10 +472,14 @@ def load_donki() -> Optional[DONKIData]:
         return None
 
 
-def load_trajectory() -> Optional[TrajectoryData]:
-    """Load cached trajectory data if not expired."""
+def load_trajectory(allow_stale: bool = False) -> Optional[TrajectoryData]:
+    """Load cached trajectory data.
+
+    Args:
+        allow_stale: If True, return data even if the cache TTL has expired.
+    """
     cache_file = CACHE_DIR / "trajectory.json"
-    if is_cache_expired(cache_file, "trajectory"):
+    if not allow_stale and is_cache_expired(cache_file, "trajectory"):
         return None
     
     try:
@@ -492,12 +513,16 @@ def load_trajectory() -> Optional[TrajectoryData]:
         return None
 
 
-def load_photo() -> Optional[MissionPhoto]:
-    """Load cached photo if not expired."""
+def load_photo(allow_stale: bool = False) -> Optional[MissionPhoto]:
+    """Load cached photo.
+
+    Args:
+        allow_stale: If True, return data even if the cache TTL has expired.
+    """
     cache_file = CACHE_DIR / "photo.bin"
     meta_file = CACHE_DIR / "photo_meta.json"
-    
-    if is_cache_expired(cache_file, "photo"):
+
+    if not allow_stale and is_cache_expired(cache_file, "photo"):
         return None
     
     try:
@@ -510,6 +535,7 @@ def load_photo() -> Optional[MissionPhoto]:
         return MissionPhoto(
             title=meta["title"],
             image_data=image_data,
+            image_url=meta.get("image_url", ""),
             url=meta["url"],
             published=meta["published"],
             fetched_at=datetime.fromisoformat(meta["fetched_at"]),

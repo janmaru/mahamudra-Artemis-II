@@ -6,8 +6,9 @@ SPACECRAFT_NAME = "Orion"
 SPACECRAFT_CALLSIGN = "Integrity"
 DSN_SPACECRAFT_CODE = "EM2"
 
-# Mission launch time (UTC) — used only for MET and flight day
-LAUNCH_TIME = datetime(2026, 4, 1, 16, 37, 0, tzinfo=timezone.utc)
+# Mission launch time (UTC) — used for MET, flight day, and phase detection
+# Actual liftoff: April 1 2026 at 6:35 PM EDT = 22:35 UTC
+LAUNCH_TIME = datetime(2026, 4, 1, 22, 35, 0, tzinfo=timezone.utc)
 
 # API URLs
 HORIZONS_URL = "https://ssd.jpl.nasa.gov/api/horizons.api"
@@ -71,10 +72,10 @@ DSN_DISH_SIZES = {
     "DSS13": 26,
 }
 
-# Mission timeline events for countdown (MT-03)
+# Mission timeline — actual event times (UTC)
 MISSION_TIMELINE = [
-    ("TLI", LAUNCH_TIME + timedelta(hours=2)),
-    ("Lunar Flyby", LAUNCH_TIME + timedelta(days=5, hours=12)),
-    ("Entry Interface", LAUNCH_TIME + timedelta(days=10, hours=1)),
-    ("Splashdown", LAUNCH_TIME + timedelta(days=10, hours=2)),
+    ("TLI", datetime(2026, 4, 2, 23, 49, 0, tzinfo=timezone.utc)),
+    ("Lunar Flyby", datetime(2026, 4, 6, 23, 0, 0, tzinfo=timezone.utc)),
+    ("Entry Interface", datetime(2026, 4, 10, 23, 53, 0, tzinfo=timezone.utc)),
+    ("Splashdown", datetime(2026, 4, 11, 0, 7, 0, tzinfo=timezone.utc)),
 ]

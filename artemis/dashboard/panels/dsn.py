@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Optional
 
 from rich.panel import Panel
@@ -5,7 +6,7 @@ from rich.table import Table
 from rich.text import Text
 
 from artemis import config
-from artemis.compute import staleness_seconds, staleness_style
+from artemis.compute import staleness_seconds, staleness_style, mission_phase_from_telemetry
 from artemis.models import DSNData
 
 
@@ -65,7 +66,11 @@ def render(data: Optional[DSNData], errors: dict[str, str]) -> Panel:
 
     if not data.dishes:
         table = Table(show_header=False, box=None, expand=True)
-        table.add_row(Text("No active DSN link to Orion", style="dim italic"))
+        phase = mission_phase_from_telemetry()
+        if phase == "Mission Complete":
+            table.add_row(Text("Mission Complete — DSN tracking ended", style="dim italic"))
+        else:
+            table.add_row(Text("No active DSN link to Orion", style="dim italic"))
 
         stale = staleness_seconds(data.fetched_at)
         style = staleness_style(stale, config.DSN_INTERVAL)

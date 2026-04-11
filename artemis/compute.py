@@ -137,10 +137,11 @@ def earth_range_rate(sc: SpacecraftData) -> float:
 
 
 def mission_phase_from_telemetry(sc: Optional[SpacecraftData] = None) -> str:
-    """Determine current mission phase from live telemetry.
+    """Determine current mission phase from live telemetry and timeline.
 
-    Uses Earth/Moon distances and Earth range-rate to classify the phase
-    without any hardcoded event times.
+    Timeline-based phases (Mission Complete, Re-Entry) take priority over
+    stale telemetry data — the mission timeline is the source of truth
+    for events that have already occurred.
 
     Args:
         sc: Current spacecraft data, or None if not yet available.
@@ -148,12 +149,22 @@ def mission_phase_from_telemetry(sc: Optional[SpacecraftData] = None) -> str:
     Returns:
         Phase name string.
     """
+    met = mission_elapsed_time()
+    if met.total_seconds() < 0:
+        return "Pre-Launch"
+
+    # Timeline-based phases always win (regardless of stale telemetry)
+    now = datetime.now(timezone.utc)
+    timeline = {name: dt for name, dt in config.MISSION_TIMELINE}
+    if "Splashdown" in timeline and now >= timeline["Splashdown"]:
+        return "Mission Complete"
+    if "Entry Interface" in timeline and now >= timeline["Entry Interface"]:
+        return "Re-Entry"
+
     if sc is None:
-        met = mission_elapsed_time()
-        if met.total_seconds() < 0:
-            return "Pre-Launch"
         return "Awaiting Data"
 
+    # Live telemetry-based phase detection (during active mission)
     e_dist = sc.distance_earth_km
     m_dist = sc.distance_moon_km
     rr = earth_range_rate(sc)

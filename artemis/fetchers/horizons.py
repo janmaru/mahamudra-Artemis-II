@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from typing import Optional
 
 from artemis import config
-from artemis.cache import cache_spacecraft, cache_trajectory
+from artemis.cache import cache_spacecraft, cache_trajectory, load_spacecraft
 from artemis.trajectory_storage import append_trajectory_points
 from artemis.compute import distance_km, distance_between, speed_km_s
 from artemis.fetchers.base import BaseFetcher
@@ -37,33 +37,48 @@ class HorizonsFetcher(BaseFetcher):
         self._trajectory_next_delay: float = 5.0  # first attempt after 5s
 
     def fetch_and_update(self) -> None:
-        """Fetch current Orion + Moon state vectors and publish SpacecraftData."""
+        """Fetch current Orion + Moon state vectors and publish SpacecraftData.
+
+        State vector fetch and trajectory refresh are independent: if the
+        state vector is unavailable (e.g. end of mission), the trajectory
+        can still update.  On state vector failure, falls back to cached data.
+        """
         now = datetime.now(timezone.utc)
-        orion_sv = self._fetch_state_vector(config.SPACECRAFT_ID, "500@399", now)
-        moon_sv = self._fetch_state_vector("301", "500@399", now)
-        
-        # Fetch RA/Dec from Earth center
-        ra, dec = self._fetch_observer_data(config.SPACECRAFT_ID, "500@399", now)
 
-        data = SpacecraftData(
-            orion=orion_sv,
-            moon=moon_sv,
-            distance_earth_km=distance_km(orion_sv.x, orion_sv.y, orion_sv.z),
-            distance_moon_km=distance_between(orion_sv, moon_sv),
-            speed_km_s=speed_km_s(orion_sv.vx, orion_sv.vy, orion_sv.vz),
-            ra=ra,
-            dec=dec,
-            fetched_at=datetime.now(timezone.utc),
-        )
-        self._state.update_spacecraft(data)
-        cache_spacecraft(data)
-        logger.info(
-            "Horizons: Earth=%.0f km, Moon=%.0f km, Speed=%.3f km/s, RA=%.2f, Dec=%.2f",
-            data.distance_earth_km, data.distance_moon_km, data.speed_km_s,
-            ra if ra is not None else 0, dec if dec is not None else 0
-        )
+        # --- State vector (independent) ---
+        try:
+            orion_sv = self._fetch_state_vector(config.SPACECRAFT_ID, "500@399", now)
+            moon_sv = self._fetch_state_vector("301", "500@399", now)
+            ra, dec = self._fetch_observer_data(config.SPACECRAFT_ID, "500@399", now)
 
-        # Trajectory refresh — separated with delay to avoid API rate limiting
+            data = SpacecraftData(
+                orion=orion_sv,
+                moon=moon_sv,
+                distance_earth_km=distance_km(orion_sv.x, orion_sv.y, orion_sv.z),
+                distance_moon_km=distance_between(orion_sv, moon_sv),
+                speed_km_s=speed_km_s(orion_sv.vx, orion_sv.vy, orion_sv.vz),
+                ra=ra,
+                dec=dec,
+                fetched_at=datetime.now(timezone.utc),
+            )
+            self._state.update_spacecraft(data)
+            cache_spacecraft(data)
+            logger.info(
+                "Horizons: Earth=%.0f km, Moon=%.0f km, Speed=%.3f km/s, RA=%.2f, Dec=%.2f",
+                data.distance_earth_km, data.distance_moon_km, data.speed_km_s,
+                ra if ra is not None else 0, dec if dec is not None else 0,
+            )
+        except Exception as exc:
+            logger.warning("State vector fetch failed: %s", exc)
+            # Fallback: load last known data from cache so panels aren't empty
+            cached = load_spacecraft(allow_stale=True)
+            if cached is not None:
+                self._state.update_spacecraft_stale(cached, str(exc))
+                logger.info("Using cached spacecraft data (fetched %s)", cached.fetched_at)
+            else:
+                self._state.set_error(self.__class__.__name__, str(exc))
+
+        # --- Trajectory refresh (independent, with rate-limit delay) ---
         now_ts = time.monotonic()
         if now_ts - self._last_trajectory_fetch >= self._trajectory_next_delay:
             self._stop_event.wait(3)  # interruptible cooldown

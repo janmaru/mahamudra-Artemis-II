@@ -12,7 +12,7 @@ from artemis import config
 from artemis.compute import (
     format_number, format_met, mission_elapsed_time,
     staleness_seconds, staleness_style, get_best_perspective,
-    get_projection_axes
+    get_projection_axes, mission_phase_from_telemetry,
 )
 from artemis.models import TrajectoryData, SpacecraftData
 
@@ -91,6 +91,20 @@ def _build_view(sc: SpacecraftData, traj: Optional[TrajectoryData] = None) -> tu
     return content, plane_label
 
 def render(trajectory: Optional[TrajectoryData], spacecraft: Optional[SpacecraftData], errors: dict[str, str]) -> Panel:
+    if mission_phase_from_telemetry() == "Mission Complete":
+        timeline = {name: dt for name, dt in config.MISSION_TIMELINE}
+        splashdown_time = timeline.get("Splashdown")
+        met = mission_elapsed_time(splashdown_time) if splashdown_time else mission_elapsed_time()
+        content = Text()
+        content.append("Mission Complete\n\n", style="bold bright_green")
+        content.append(f" Final MET: {format_met(met)}\n", style="bright_green")
+        if spacecraft:
+            content.append(f" Last tracked: Earth {format_number(spacecraft.distance_earth_km)} km", style="dim")
+            content.append(f" | {spacecraft.orion.epoch.strftime('%Y-%m-%d %H:%M UTC')}\n", style="dim")
+        content.append("\n Orion splashed down in the Pacific Ocean.\n", style="bright_white")
+        content.append(" [T] to open trajectory viewer", style="dim")
+        return Panel(content, title="[bold]ARTEMIS II TRAJECTORY[/bold]", border_style="bright_blue")
+
     plane_label = "X-Y"
     if spacecraft is not None:
         try:
@@ -99,14 +113,14 @@ def render(trajectory: Optional[TrajectoryData], spacecraft: Optional[Spacecraft
             content = Text("Render error", style="red")
     else:
         content = Text("Awaiting data...", style="dim")
-    
+
     content.append("\n")
     met = mission_elapsed_time()
     legend = Text(f" MET {format_met(met)} | {plane_label}", style="bright_green")
     if spacecraft:
         legend.append(f"  Earth {format_number(spacecraft.distance_earth_km)} km", style="bright_blue")
         legend.append(f"  Moon {format_number(spacecraft.distance_moon_km)} km", style="bright_yellow")
-    
+
     legend.append(" | Press [T] to open", style="dim")
     content.append_text(legend)
     return Panel(content, title="[bold]ARTEMIS II TRAJECTORY[/bold]", border_style="bright_blue")

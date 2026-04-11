@@ -11,6 +11,7 @@ from rich.console import Console
 from rich.live import Live
 
 from artemis import config
+from artemis.cache import load_spacecraft, load_dsn, load_weather, load_donki, load_trajectory, load_photo
 from artemis.state import SharedState
 from artemis.fetchers.horizons import HorizonsFetcher
 from artemis.fetchers.dsn import DSNFetcher
@@ -28,6 +29,7 @@ class DashboardApp:
 
     def __init__(self):
         self.state = SharedState()
+        self._load_cached_state()
         self.console = Console()
         self.fetchers = [
             HorizonsFetcher(self.state),
@@ -38,6 +40,25 @@ class DashboardApp:
         ]
         self._stop_event = threading.Event()
         self._last_photo_url: str = ""
+
+    def _load_cached_state(self) -> None:
+        """Pre-populate SharedState from disk cache so panels are never empty on startup."""
+        loaders = [
+            ("spacecraft", load_spacecraft, self.state.update_spacecraft),
+            ("dsn", load_dsn, self.state.update_dsn),
+            ("weather", load_weather, self.state.update_weather),
+            ("donki", load_donki, self.state.update_donki),
+            ("trajectory", load_trajectory, self.state.update_trajectory),
+            ("photo", load_photo, self.state.update_photo),
+        ]
+        for name, loader, updater in loaders:
+            try:
+                data = loader(allow_stale=True)
+                if data is not None:
+                    updater(data)
+                    logger.info("Loaded cached %s data", name)
+            except Exception as exc:
+                logger.warning("Failed to load cached %s data: %s", name, exc)
 
     def _key_listener(self) -> None:
         """Listen for keyboard input in a separate thread."""

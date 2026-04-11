@@ -18,6 +18,9 @@ from artemis.models import SpacecraftData
 def render(sc: Optional[SpacecraftData] = None) -> Panel:
     """Render the mission header panel with title, MET, flight day, and phase.
 
+    After Splashdown, the MET is frozen at the final value and the phase
+    shows "Mission Complete" instead of a countdown.
+
     Args:
         sc: Current spacecraft telemetry for phase detection, or None.
 
@@ -25,9 +28,18 @@ def render(sc: Optional[SpacecraftData] = None) -> Panel:
         Rich Panel displaying Artemis II mission status bar.
     """
     now = datetime.now(timezone.utc)
-    met = mission_elapsed_time(now)
-    fd = flight_day(now)
     phase = mission_phase_from_telemetry(sc)
+
+    # After splashdown: freeze MET and flight day at final values
+    timeline = {name: dt for name, dt in config.MISSION_TIMELINE}
+    splashdown_time = timeline.get("Splashdown")
+    mission_complete = splashdown_time is not None and now >= splashdown_time
+    if mission_complete:
+        met = mission_elapsed_time(splashdown_time)
+        fd = flight_day(splashdown_time)
+    else:
+        met = mission_elapsed_time(now)
+        fd = flight_day(now)
 
     title = Text("ARTEMIS II", style="bold bright_white")
     title.append(" - ORION ", style="bold white")
@@ -41,18 +53,26 @@ def render(sc: Optional[SpacecraftData] = None) -> Panel:
     met_text.append("  |  ", style="dim")
     met_text.append(f"Phase: {phase}", style="bold magenta")
 
-    # Countdown to next major event (MT-03)
-    next_event = None
-    for name, ts in config.MISSION_TIMELINE:
-        if ts > now:
-            next_event = (name, ts - now)
-            break
-    
-    if next_event:
-        name, remaining = next_event
+    if mission_complete:
+        # Show elapsed time since splashdown
+        since = now - splashdown_time
+        hours = int(since.total_seconds() // 3600)
+        minutes = int((since.total_seconds() % 3600) // 60)
         met_text.append("  |  ", style="dim")
-        met_text.append(f"Next: {name} in ", style="dim")
-        met_text.append(format_met(remaining), style="bold orange1")
+        met_text.append(f"Splashdown +{hours}h {minutes:02d}m", style="bold bright_green")
+    else:
+        # Countdown to next major event
+        next_event = None
+        for name, ts in config.MISSION_TIMELINE:
+            if ts > now:
+                next_event = (name, ts - now)
+                break
+
+        if next_event:
+            name, remaining = next_event
+            met_text.append("  |  ", style="dim")
+            met_text.append(f"Next: {name} in ", style="dim")
+            met_text.append(format_met(remaining), style="bold orange1")
 
     content = Text()
     content.append_text(title)

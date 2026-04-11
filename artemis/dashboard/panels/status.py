@@ -4,7 +4,7 @@ from rich.panel import Panel
 from rich.text import Text
 
 from artemis import config
-from artemis.compute import staleness_seconds, staleness_style
+from artemis.compute import staleness_seconds, staleness_style, mission_phase_from_telemetry
 from artemis.models import SpacecraftData, DSNData, SpaceWeatherData, DONKIData, TrajectoryData
 
 _FetchedModel = Union[SpacecraftData, DSNData, SpaceWeatherData, DONKIData]
@@ -38,6 +38,8 @@ def render(
     Returns:
         Rich Panel with fetcher staleness and trajectory status.
     """
+    mission_complete = mission_phase_from_telemetry() == "Mission Complete"
+
     data_map: dict[str, Optional[_FetchedModel]] = {
         "HorizonsFetcher": spacecraft,
         "DSNFetcher": dsn_data,
@@ -56,7 +58,9 @@ def render(
 
         content.append(f"{label}: ", style="dim")
 
-        if error:
+        if mission_complete:
+            content.append("Done", style="bright_green")
+        elif error:
             content.append("ERR", style="bold red")
         elif data is None:
             content.append("...", style="dim italic")
@@ -68,7 +72,9 @@ def render(
     # Trajectory status (refreshed periodically via Horizons)
     content.append("  |  ", style="dim")
     content.append("Traj: ", style="dim")
-    if trajectory is None:
+    if mission_complete:
+        content.append("Final", style="bright_green")
+    elif trajectory is None:
         content.append("...", style="dim italic")
     else:
         stale = staleness_seconds(trajectory.fetched_at)
