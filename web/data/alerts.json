@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-11T10:34:11.146686Z",
+  "timestamp": "2026-04-11T10:56:10.015150Z",
   "data": {
     "events": [
       {
@@ -105,6 +105,6 @@
         "link": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/45564/-1"
       }
     ],
-    "fetched_at": "2026-04-11 10:34:11.146370+00:00"
+    "fetched_at": "2026-04-11 10:56:10.014842+00:00"
   }
 }
