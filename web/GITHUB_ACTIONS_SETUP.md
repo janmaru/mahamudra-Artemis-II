@@ -1,11 +1,13 @@
-# GitHub Actions Setup Complete ✅
+# GitHub Actions Setup Complete ✅ (currently disabled)
 
 ## What Was Created
 
 ### 1. GitHub Action Workflow
 **File:** `.github/workflows/update-web-data.yml`
 
-Automatically fetches fresh NASA API data every **10 minutes** and updates the web dashboard:
+**Status: DISABLED** — the job has `if: false` to suspend execution. Remove that line to re-enable.
+
+When active, fetches fresh NASA API data every **10 minutes** and updates the web dashboard:
 
 ```yaml
 Schedule: */10 * * * * (every 10 minutes)
@@ -46,7 +48,7 @@ Output: web/data/*.json with timestamp
 ```
 NASA APIs
    ↓
-GitHub Action (every 10 min)
+GitHub Action (disabled)
    ↓
 web/data/*.json (cached)
    ↓
@@ -106,10 +108,11 @@ git push origin main
    - **Folder:** / (root)
 4. Save
 
-### Step 3: GitHub Actions Will Run
-- Automatically on every push
-- Every 10 minutes on schedule
-- You can trigger manually from Actions tab
+### Step 3: Re-enable GitHub Action
+The workflow is currently **disabled** (`if: false`). To re-enable:
+1. Edit `.github/workflows/update-web-data.yml`
+2. Remove the `if: false` line from the `update-data` job
+3. Commit and push — the action will then run on push, schedule, and manual trigger
 
 ### Step 4: Access Dashboard
 Once GitHub Pages is enabled:
@@ -140,7 +143,7 @@ python -m http.server 8000
 
 ## Data Update Flow
 
-1. **GitHub Action triggers** (on push or every 10 min)
+1. **GitHub Action triggers** (on push or every 10 min — currently disabled, see Step 3 above)
 2. **Checks out repository**
 3. **Runs `scripts/update_web_data.py`**
 4. **Fetches from NASA APIs:**

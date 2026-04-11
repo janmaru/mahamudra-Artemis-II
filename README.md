@@ -107,7 +107,7 @@ mahamudra-Artemis-II/
 ├── scripts/
 │   └── update_web_data.py         # Fetches NASA data for web (GitHub Actions)
 ├── .github/workflows/
-│   └── update-web-data.yml        # GitHub Action (every 10 min)
+│   └── update-web-data.yml        # GitHub Action (disabled — see if: false)
 ├── docs/
 │   ├── technical-analysis.md
 │   ├── functional-analysis.md

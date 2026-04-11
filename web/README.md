@@ -14,7 +14,7 @@ A responsive web version of the Artemis II mission dashboard, deployable on GitH
 - ✅ Canvas trajectory map (Earth/Moon/Orion with logarithmic scaling)
 - ✅ Terminal-style UI (green-on-black theme)
 - ✅ Responsive layout (desktop & mobile)
-- ✅ GitHub Actions auto-refresh (every 10 minutes)
+- ⏸️ GitHub Actions auto-refresh (currently disabled)
 
 ### Planned (Phase 2+)
 - [ ] Interactive 3D trajectory viewer (Three.js)
@@ -28,7 +28,7 @@ A responsive web version of the Artemis II mission dashboard, deployable on GitH
 
 ### How it Works
 
-1. **GitHub Action** (`.github/workflows/update-web-data.yml`) runs every 10 minutes
+1. **GitHub Action** (`.github/workflows/update-web-data.yml`) — currently **disabled** (`if: false`). When active, runs every 10 minutes
 2. Action runs `scripts/update_web_data.py` which fetches fresh data from NASA APIs
 3. Telemetry data saved as JSON files to `web/data/` (spacecraft, DSN, weather, alerts)
 4. Photos fetched directly from NASA IOTD RSS feed (up to 10) and saved to `web/data/photos.json`
@@ -53,7 +53,7 @@ A responsive web version of the Artemis II mission dashboard, deployable on GitH
 ```
 NASA APIs (Horizons, DSN, SWPC, DONKI)
     ↓
-GitHub Action (every 10 min)
+GitHub Action (disabled)
     ↓
 scripts/update_web_data.py
     ↓
@@ -82,19 +82,20 @@ Then visit `http://localhost:8000`
 
 1. Push this repository to GitHub
 2. Enable GitHub Pages in Settings → Pages (source: `main` branch, `/root`)
-3. GitHub Actions will automatically run on push and every 10 minutes
+3. GitHub Actions workflow is currently **disabled**. To re-enable, remove `if: false` from the job in `.github/workflows/update-web-data.yml`
 4. Data files will be created/updated in `web/data/`
 5. Visit `https://yourusername.github.io/mahamudra-Artemis-II/`
 
 ## GitHub Action Setup
 
 The workflow file `.github/workflows/update-web-data.yml`:
-- Triggers every 10 minutes (`*/10 * * * *`)
+- **Currently disabled** (`if: false` on the job)
+- When active: triggers every 10 minutes (`*/10 * * * *`)
 - Installs Python dependencies
 - Runs `scripts/update_web_data.py` to fetch fresh NASA API data
 - Commits and pushes updated `web/data/*.json` files
 
-No additional setup needed - just push to GitHub!
+To re-enable, remove the `if: false` line from the `update-data` job in the workflow file.
 
 ## Data Sources
 
@@ -121,12 +122,11 @@ All data comes from public NASA APIs (no authentication required):
 - Check GitHub Actions tab for workflow failures
 
 **Data is stale?**
-- Trigger GitHub Action manually: Actions tab → "Update Artemis II Web Dashboard Data" → "Run workflow"
-- Or wait for next scheduled run (10 min)
+- The GitHub Action is currently disabled. Re-enable it by removing `if: false` from the workflow, then trigger manually or wait for the next scheduled run
 
 ## Next Steps
 
-1. Enable GitHub Actions in repository settings
+1. Re-enable the GitHub Action (remove `if: false` from `.github/workflows/update-web-data.yml`)
 2. Deploy to GitHub Pages
 3. Add 3D trajectory visualization
 4. Create historical data archive
