@@ -4,15 +4,15 @@
     "kp": 1.67
   },
   "solar_wind": {
-    "speed": 571.9,
-    "density": 2.2,
-    "temperature": 171768.0,
-    "bz": 3.2
+    "speed": 552.1,
+    "density": 1.45,
+    "temperature": 126193.0,
+    "bz": 2.83
   },
   "scales": {
     "g": 0,
     "s": 0,
     "r": 0
   },
-  "fetched_at": "2026-04-11T19:50:06.558056+00:00"
+  "fetched_at": "2026-04-11T20:05:39.124633+00:00"
 }

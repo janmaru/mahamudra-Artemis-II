@@ -90,10 +90,18 @@ def render(
                 row.append(f"  {time_str}", style="dim")
             table.add_row(row)
 
-    # Staleness
+    # Staleness — show from whichever source is available
+    fetched_at = None
+    interval = config.DONKI_INTERVAL
     if donki:
-        stale = staleness_seconds(donki.fetched_at)
-        style = staleness_style(stale, config.DONKI_INTERVAL)
+        fetched_at = donki.fetched_at
+    elif weather:
+        fetched_at = weather.fetched_at
+        interval = config.SWPC_INTERVAL
+
+    if fetched_at:
+        stale = staleness_seconds(fetched_at)
+        style = staleness_style(stale, interval)
         minutes = int(stale // 60)
         if minutes > 0:
             table.add_row(Text(f"Updated {minutes}m ago", style=style))

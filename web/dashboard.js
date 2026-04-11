@@ -331,19 +331,31 @@ class Dashboard {
      * Update space weather panel
      */
     updateWeather(weather) {
+        if (this.isMissionComplete()) {
+            document.getElementById('kp-index').textContent = 'Mission Complete';
+            document.getElementById('kp-index').style.color = '#88ff99';
+            document.getElementById('noaa-scales').textContent = 'Data no longer updated';
+            document.getElementById('noaa-scales').style.color = '#666';
+            document.getElementById('wind-speed').textContent = '--';
+            document.getElementById('wind-density').textContent = '--';
+            document.getElementById('imf-bz').textContent = '--';
+            document.getElementById('wind-temp').textContent = '--';
+            return;
+        }
+
         if (!weather) return;
 
-        document.getElementById('kp-index').textContent = 
+        document.getElementById('kp-index').textContent =
             `${weather.kpIndex} (${weather.kpLabel})`;
-        document.getElementById('noaa-scales').textContent = 
+        document.getElementById('noaa-scales').textContent =
             `G${weather.noaaScales.G}  S${weather.noaaScales.S}  R${weather.noaaScales.R}`;
-        document.getElementById('wind-speed').textContent = 
+        document.getElementById('wind-speed').textContent =
             `${weather.windSpeed} km/s`;
-        document.getElementById('wind-density').textContent = 
+        document.getElementById('wind-density').textContent =
             `${weather.windDensity} p/cm³`;
-        document.getElementById('imf-bz').textContent = 
+        document.getElementById('imf-bz').textContent =
             `${weather.imfBz} nT`;
-        document.getElementById('wind-temp').textContent = 
+        document.getElementById('wind-temp').textContent =
             `${weather.windTemp} K`;
     }
 
@@ -352,6 +364,11 @@ class Dashboard {
      */
     updateAlerts(events) {
         const alertsList = document.getElementById('alerts-list');
+
+        if (this.isMissionComplete()) {
+            alertsList.innerHTML = '<li style="color:#88ff99;border-left-color:#88ff99">Mission Complete — Alerts monitoring ended</li>';
+            return;
+        }
 
         if (!events || events.length === 0) {
             alertsList.innerHTML = '<li class="none">No active alerts</li>';
